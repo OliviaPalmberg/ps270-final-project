@@ -116,7 +116,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.30/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["2016-2022 Validated Voter Detailed Tables - Sheet 1.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.30/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1545,8 +1545,37 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 <div class="d-article">
 <h2 id="project-thoughts">Project thoughts</h2>
-<p>I am interested in exploring data related to recent elections and the how the voting trends have changed across swing states. I would also potentially like to explore data showing how the different political parties have gone public throughout different states over the different elections, and the correlation to the final election results.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p>I am interested in exploring data related to recent elections and the how the voting trends have changed. I would specifically like to look into how different factors effect voting behaviors. An example of this would be how education plays a role in voting.</p>
+<p>How has education affected voting trends and patterns in recent elections? Based on data from recent elections, it seems that as education gets higher, people tend to vote for the Democratic Party as opposed to the Republican Party. To measure this, we will be analyzing different levels of education in the categories of “HS or less”, “Some College”, “4 year College”, and “Postgrad”. Education has our explanatory variables. Our outcome variable is the percentage towards that party/candidate. We will be looking at how education changes the official results in terms of percentage for Democratic and Republican presidential candidates from past years. The observed pattern from the data points to higher education changing percentages to be higher for Democratic candidates.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span><span class='va'>voting_demographics</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"2016-2022 Validated Voter Detailed Tables - Sheet 1.csv"</span><span class='op'>)</span></span>
+<span><span class='va'>voting_demographics</span></span></code></pre>
+</div>
+<pre><code># A tibble: 180 × 40
+   2016, 2018, 2020 and 20…¹ ...2  ...3  ...4  ...5  ...6  ...7  ...8 
+   &lt;chr&gt;                     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+ 1 &quot;Detailed tables for \&quot;R… &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
+ 2 &quot;Pew Research Center rep… Blan… &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
+ 3  &lt;NA&gt;                     2022… 2022… 2022… 2020… 2020… 2020… 2018…
+ 4  &lt;NA&gt;                     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
+ 5 &quot;Gender&quot;                  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
+ 6 &quot;Men&quot;                     44    54    -10   48    50    -2    50   
+ 7 &quot;Women&quot;                   51    48    3     55    44    11    58   
+ 8  &lt;NA&gt;                     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
+ 9 &quot;Race and ethnicity&quot;      &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
+10 &quot;White, non-Hispanic&quot;     41    57    -16   43    55    -12   46   
+# ℹ 170 more rows
+# ℹ abbreviated name:
+#   ¹​`2016, 2018, 2020 and 2022 Voter demographics, based on validated voters`
+# ℹ 32 more variables: ...9 &lt;chr&gt;, `Terms of Use` &lt;chr&gt;, ...11 &lt;chr&gt;,
+#   ...12 &lt;chr&gt;, ...13 &lt;chr&gt;, ...14 &lt;chr&gt;, ...15 &lt;chr&gt;, ...16 &lt;chr&gt;,
+#   ...17 &lt;chr&gt;, ...18 &lt;chr&gt;, ...19 &lt;chr&gt;, ...20 &lt;chr&gt;, ...21 &lt;chr&gt;,
+#   ...22 &lt;chr&gt;, ...23 &lt;chr&gt;, ...24 &lt;chr&gt;, ...25 &lt;chr&gt;, …</code></pre>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
