@@ -17,5 +17,9 @@ How has education affected voting trends and patterns in recent elections? Based
 
 ```{r}
 library(tidyverse)
+library(dplyr)
+voting_demographics <- read_csv("2016-2022 Validated Voter Detailed Tables - Sheet 1.csv")
+voting_demographics
+
 ```
 
