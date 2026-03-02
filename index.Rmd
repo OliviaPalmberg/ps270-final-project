@@ -11,4 +11,11 @@ output:
 
 ## Project thoughts
 
-I am interested in exploring data related to recent elections and the how the voting trends have changed across swing states. I would also potentially like to explore data showing how the different political parties have gone public throughout different states over the different elections, and the correlation to the final  election results. 
+I am interested in exploring data related to recent elections and the how the voting trends have changed. I would specifically like to look into how different factors effect voting behaviors. An example of this would be how education plays a role in voting. 
+
+How has education affected voting trends and patterns in recent elections? Based on data from recent elections, it seems that as education gets higher, people tend to vote for the Democratic Party as opposed to the Republican Party. To measure this, we will be analyzing different levels of education in the categories of "HS or less", "Some College", "4 year College", and "Postgrad". Education has our explanatory variables. Our outcome variable is the percentage towards that party/candidate. We will be looking at how education changes the official results in terms of percentage for Democratic and Republican presidential candidates from past years. The observed pattern from the data points to higher education changing percentages to be higher for Democratic candidates. 
+
+```{r}
+library(tidyverse)
+```
+
