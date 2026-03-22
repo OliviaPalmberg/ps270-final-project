@@ -42,6 +42,6 @@ ggplot(twentytwo_house,
        mapping = aes(x = Education, y = `2022 Democratic House Vote`)) +
   geom_col() +
   labs(x = "Education Levels", y = "Number of Votes for 2022 Democratic House", title = "Distribution of 2022 Democratic House Votes Accross Education Levels")
-twentytwo_house
+print(twentytwo_house)
 ```
 This bar graph reflects the amount of votes in favor of the 2022 Democratic House across education levels. The results show that the higher the education level is, the more votes there are in support of the 2022 Democratic House. 
