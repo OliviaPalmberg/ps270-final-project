@@ -19,7 +19,29 @@ How has education affected voting trends and patterns in recent elections? Based
 library(tidyverse)
 library(dplyr)
 voting_demographics <- read_csv("2016-2022 Validated Voter Detailed Tables - Sheet 1.csv")
-voting_demographics
-
+sorted_education1 <- voting_demographics[-c(118:180),]
+sorted_education1 <- voting_demographics[-c(4:112),]
+sorted_ed <- sorted_education1[-c(9:71),]
+sorted_ed <- sorted_ed[,-c(3:40)]
+colnames(sorted_ed)[1] <- "Education"
+colnames(sorted_ed)[2] <- "2022 Democratic House Vote"
+keep <- c(FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE)
+sortedfinal <- sorted_ed[keep,]
 ```
 
+Above, I cleaned by deleting columns and rows to make a new data frame. This made is so that my tibble only shows education levels and the 2022 Democratic House votes. 
+
+
+Now, I will show the distribution between the different education levels and the 2022 Democratic House votes. 
+
+```{r}
+install.packages("ggplot2")
+library(ggplot2)
+twentytwo_house <- sortedfinal |>
+ggplot(twentytwo_house,
+       mapping = aes(x = Education, y = `2022 Democratic House Vote`)) +
+  geom_col() +
+  labs(x = "Education Levels", y = "Number of Votes for 2022 Democratic House", title = "Distribution of 2022 Democratic House Votes Accross Education Levels")
+twentytwo_house
+```
+This bar graph reflects the amount of votes in favor of the 2022 Democratic House across education levels. The results show that the higher the education level is, the more votes there are in support of the 2022 Democratic House. 
