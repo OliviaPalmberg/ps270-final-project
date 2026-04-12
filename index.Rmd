@@ -15,6 +15,8 @@ I am interested in exploring data related to recent elections and the how the vo
 
 How has education affected voting trends and patterns in recent elections? Based on data from recent elections, it seems that as education gets higher, people tend to vote for the Democratic Party as opposed to the Republican Party. To measure this, we will be analyzing different levels of education in the categories of "HS or less", "Some College", "4 year College", and "Postgrad". Education has our explanatory variables. Our outcome variable is the percentage towards that party/candidate. We will be looking at how education changes the official results in terms of percentage for Democratic and Republican presidential candidates from past years. The observed pattern from the data points to higher education changing percentages to be higher for Democratic candidates. 
 
+## 2022 Democratic House Vote 
+
 ```{r}
 library(tidyverse)
 library(dplyr)
@@ -27,9 +29,9 @@ colnames(sorted_ed)[1] <- "Education"
 colnames(sorted_ed)[2] <- "2022 Democratic House Vote"
 keep <- c(FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE)
 sortedfinal <- sorted_ed[keep,]
+knitr::kable(sortedfinal)
 ```
-
-Above, I cleaned by deleting columns and rows to make a new data frame. This made is so that my tibble only shows education levels and the 2022 Democratic House votes. 
+Above, I cleaned by deleting columns and rows to make a new data frame. This made is so that my tibble only shows education levels and the 2022 Democratic House votes. Then I printed it into a clean table. 
 
 
 Now, I will show the distribution between the different education levels and the 2022 Democratic House votes. 
@@ -37,11 +39,58 @@ Now, I will show the distribution between the different education levels and the
 ```{r}
 install.packages("ggplot2")
 library(ggplot2)
-twentytwo_house <- sortedfinal |>
-ggplot(twentytwo_house,
+twentytwo_dem_house <- sortedfinal |>
+ggplot(twentytwo_dem_house,
        mapping = aes(x = Education, y = `2022 Democratic House Vote`)) +
   geom_col() +
   labs(x = "Education Levels", y = "Number of Votes for 2022 Democratic House", title = "Distribution of 2022 Democratic House Votes Accross Education Levels")
-print(twentytwo_house)
+print(twentytwo_dem_house)
 ```
-This bar graph reflects the amount of votes in favor of the 2022 Democratic House across education levels. The results show that the higher the education level is, the more votes there are in support of the 2022 Democratic House. 
+This bar graph reflects the amount of votes in favor of the 2022 Democratic House across education levels. This shows that the highest percentage of support for the 2022 Democratic House Vote is 61% and is under the Education Level "Postgrad". The results show that the higher the education level is, the more votes there are in support of the 2022 Democratic House.
+
+## 2022 Republican House Vote
+
+```{r}
+voting_demographics <- read_csv("2016-2022 Validated Voter Detailed Tables - Sheet 1.csv")
+sorted_education1 <- voting_demographics[-c(118:180),]
+sorted_education1 <- voting_demographics[-c(4:112),]
+sorted_ed2 <- sorted_education1[-c(9:71),]
+sorted_ed2 <- sorted_ed2[,-c(4:40)]
+sorted_ed2 <- sorted_ed2[,-c(2),]
+colnames(sorted_ed2)[1] <- "Education"
+colnames(sorted_ed2)[2] <- "2022 Republican House Vote"
+keep <- c(FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE)
+sortedfinal2 <- sorted_ed2[keep,]
+knitr::kable(sortedfinal2)
+```
+Above, I cleaned by deleting columns and rows to make a new data frame. This made is so that my tibble only shows education levels and the 2022 Republican House votes. Then I printed it into a clean table. 
+
+Now, I will show the distribution between the different education levels and the 2022 Republican House votes. 
+
+```{r}
+twentytwo_rep_house <- sortedfinal2 |>
+ggplot(twentytwo_rep_house,
+       mapping = aes(x = Education, y = `2022 Republican House Vote`)) +
+  geom_col() +
+  labs(x = "Education Levels", y = "Number of Votes for 2022 Republican House", title = "Distribution of 2022 Republican House Votes Accross Education Levels") 
+print(twentytwo_rep_house)
+```
+This bar graph reflects the amount of votes in favor of the 2022 Republican House across education levels. This shows that the highest percentage of support for the 2022 Republican House Vote is 59% and is under the Education Level "HS or less". The results show that the the higher the education level is, the less votes there are in support of the 2022 Republican House.  
+
+## Regression for 2022 Democratic House Vote and 2022 Republican House Vote 
+```{r}
+dem_fit <- lm(`2022 Democratic House Vote` ~ Education, data = sortedfinal)
+dem_fit
+
+rep_fit <- lm(`2022 Republican House Vote` ~ Education, data = sortedfinal2)
+rep_fit
+```
+
+
+## Analyzing Results between 2022 Democratic House Vote and 2022 Republican House Vote
+
+When we compare the 2022 Democratic House Vote and the 2022 Republican House vote, we see that the correlation between education and voting patterns shows higher education is associated with voting in favor of the Democratic Party, and lower education is associated with voting in favor of the Republican Party. As education increases, Democratic vote increases and Republican Vote decreases. 
+
+
+
+
