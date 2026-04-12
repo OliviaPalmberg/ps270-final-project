@@ -87,7 +87,7 @@ rep_fit
 ```
 
 
-## Analyzing Results between 2022 Democratic House Vote and 2022 Republican House Vote
+## Analyzing Results between 2022 Democratic House Vote and 2022 Republican House Vote 
 
 When we compare the 2022 Democratic House Vote and the 2022 Republican House vote, we see that the correlation between education and voting patterns shows higher education is associated with voting in favor of the Democratic Party, and lower education is associated with voting in favor of the Republican Party. As education increases, Democratic vote increases and Republican Vote decreases. 
 
