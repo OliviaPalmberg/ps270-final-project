@@ -8,18 +8,24 @@ output:
 ---
 
 
+## Introduction 
 
-## Project thoughts
+In this project I have aimed to explore how education has affected voting patterns. The question I worked to answer is: As education increases, are individuals more or less in support of the democratic party. To uncover this, I looked at different demographics and how they affected voting results in the 2022 Democratic House race. My main hypothesis was that as education increases, support for the Democratic Party will increase. 
 
-I am interested in exploring data related to recent elections and the how the voting trends have changed. I would specifically like to look into how different factors effect voting behaviors. An example of this would be how education plays a role in voting. 
+This research question is important because demographics play a very prominent role in the way that individuals vote and affiliate with different political parties. This question works to uncover a core driver of political behavior: how individual's backgrounds shape the way that they vote. Looking specifically at education helps explain larger patterns in elections in the way that education can affect how people access and process information. Furthermore, the way we access information has a large impact on our beliefs and party/candidate preferences as well. 
 
-How has education affected voting trends and patterns in recent elections? Based on data from recent elections, it seems that as education gets higher, people tend to vote for the Democratic Party as opposed to the Republican Party. To measure this, we will be analyzing different levels of education in the categories of "HS or less", "Some College", "4 year College", and "Postgrad". Education has our explanatory variables. Our outcome variable is the percentage towards that party/candidate. We will be looking at how education changes the official results in terms of percentage for Democratic and Republican presidential candidates from past years. The observed pattern from the data points to higher education changing percentages to be higher for Democratic candidates. 
 
-## 2022 Democratic House Vote 
+## Data Section 
+
+To measure the support for the Democratic party among different education levels, I will be taking the data and creating four different conditions. I will categorize each individual into "HS or less", "College, under 4 years", "Bachelor's degree", and "Postgrad". Education is the explanatory variable, as each category/level will yield a different outcome of percentage in support for the 2022 Democratic House. The outcome variable is the percentage votes per each education level, reflecting support for the 2022 Democratic House. 
+
+An outcome of higher percentages for each education increase would prove my hypothesis to be correct, while an outcome showing variability or decrease of percentages for each education increase would prove my hypothesis to be incorrect. 
 
 ```{r}
 library(tidyverse)
 library(dplyr)
+library(readr)
+library(broom)
 ```
 
 ```{r}
@@ -42,9 +48,19 @@ vote_data <-
 vote_data
 ```
 
-Here I did some data cleaning to create a clea table that shows different education levels and if they voted for the democratic party or not. 
+Here I did some data cleaning to create table that shows individuals under the different education levels, and if they voted in support of the 2022 Democratic House or not. If they voted in support of the Democratic Party they are labeled "TRUE", if they did not then they are labeled "FALSE". 
 
-## Distribution of 2022 Democratic House Votes Accross Education Levels 
+```{r}
+edu_vote <- vote_data |>
+  group_by(education) |>
+  summarize(percentage_dem = mean(congvote_dem) * 100) 
+knitr::kable(edu_vote, digits = 2)
+```
+
+Here I created a clean table showing the average percentage of support for the 2022 Democratic House for each education level. 
+
+
+## Results Section
 
 ```{r}
 twentytwo_dem_house <- vote_data |>
@@ -53,16 +69,21 @@ twentytwo_dem_house <- vote_data |>
 ggplot(mapping = aes(x = education, y =  dem_pct)) +
   geom_col() +
   labs(x = "Education Levels", y = "Percentage Votes for 2022 Democratic House", title = "Distribution of 2022 Democratic House Votes Accross Education Levels")
-print(twentytwo_dem_house)
+twentytwo_dem_house
 ```
-Here I plotted the distribution of the percentage that each education level voted democrat in the House Election. The distribution shows that as education gets higher, it seems that there is generally stronger support for the democratic party because the percentage of votes is increasing. However, it seems that college under four years has a slightly lower support for the democratic party than highnschool or less. 
+Here I plotted the distribution of the percentage that each education level voted democrat in the House Election. The distribution shows that as education gets higher, it seems that there is generally stronger support for the democratic party because the percentage of votes is increasing. However, it seems that college under four years has a slightly lower support for the democratic party than high school or less. 
 
-## Regression 
 
 ```{r}
-lm(congvote_dem ~ education, data = vote_data) |> summary()
-```
-Here I made a regression that showed education levels and support for the Democratic party. This uses high school or less as the baseline intercept and it seems that support goes down by about .06 at colege under 4 years. Then from there the support increases for both Bachelor's degree and Postgrad. 
+fit <- lm(congvote_dem ~ education, data = vote_data) 
+fit
 
+tidy(fit) |>
+  knitr::kable(digits = 3)
+```
+Here I made a regression that showed education levels and support for the Democratic party. This uses high school or less as the baseline intercept and it seems that support goes down by about .06 at college under 4 years. Then from there the support increases for both Bachelor's degree and Postgrad. 
+
+
+## 
 
 ```
