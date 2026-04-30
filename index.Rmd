@@ -77,7 +77,7 @@ ggplot(mapping = aes(x = dem, y = percent, fill = dem)) +
 
 ## Results Section
 
-I created a visual bar plot which shows the distribution in percentage that each education level voted Democrat in the 2022 House Race. Each education level has its own column on the x-axis and the percentage of individuals supporting the Democratic Party in the 2022 House Race is shown on the y-axis. Each column is a different shade of blue, which shows the lighter the blue is means the lowest support for the Democratic Party out of the four levels, and the darker blue is means the highest support for the Democratic Party out of the four levels. 
+I created a visual bar plot which shows the distribution in percentage that each education level voted Democrat in the 2022 House Race. Each education level has its own column on the x-axis and the percentage of individuals supporting the Democratic Party in the 2022 House Race is shown on the y-axis. Each column is a different shade of blue, which shows that the lighter the blue is means the lowest support for the Democratic Party out of the four levels, and the darker the blue is means the highest support for the Democratic Party out of the four levels. 
 
 ```{r,echo=FALSE}
 twentytwo_dem_house <- vote_data |>
