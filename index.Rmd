@@ -1,7 +1,7 @@
 ---
-title: "PS270 Final Project"
+title: "Different Education Levls on Support for 2022 Democratic House"
 author: Olivia Palmberg
-description: "My final project"
+description: "As education increases, are individuals more or less in support of the Democratic Party?"
 output:
   distill::distill_article:
     self_contained: false
@@ -10,25 +10,29 @@ output:
 
 ## Introduction 
 
-In this project I have aimed to explore how education has affected voting patterns. The question I worked to answer is: As education increases, are individuals more or less in support of the democratic party. To uncover this, I looked at different demographics and how they affected voting results in the 2022 Democratic House race. My main hypothesis was that as education increases, support for the Democratic Party will increase. 
+In this project I have aimed to explore how education has affected voting patterns. The question I worked to answer is: As education increases, are individuals more or less in support of the Democratic Party? To uncover this, I looked at different demographics and how they affected voting results in the 2022 Democratic House race. My main hypothesis was that as education increases, support for the Democratic Party will increase. Higher education promotes a higher chance of detection for spotting fake news, which is typically more prominent in the Republican Party. 
 
-This research question is important because demographics play a very prominent role in the way that individuals vote and affiliate with different political parties. This question works to uncover a core driver of political behavior: how individual's backgrounds shape the way that they vote. Looking specifically at education helps explain larger patterns in elections in the way that education can affect how people access and process information. Furthermore, the way we access information has a large impact on our beliefs and party/candidate preferences as well. 
+This research question is important because demographics play a very prominent role in the way that individuals vote and affiliate with different political parties. This question works to uncover a core driver of political behavior: how individual's backgrounds shape the way that they vote. Looking specifically at education helps explain larger patterns in elections in the way that education can affect how people access and process information. Furthermore, the way we access information has a large impact on our beliefs and party/candidate preferences as well. We should care about this can help us predict voting patterns for future elections. 
 
 
 ## Data Section 
 
-To measure the support for the Democratic party among different education levels, I will be taking the data and creating four different conditions. I will categorize each individual into "HS or less", "College, under 4 years", "Bachelor's degree", and "Postgrad". Education is the explanatory variable, as each category/level will yield a different outcome of percentage in support for the 2022 Democratic House. The outcome variable is the percentage votes per each education level, reflecting support for the 2022 Democratic House. 
+I used data from the American Trends Panel (ATP) survey wave 117. This data explored how different demographics impact voting trends across different elections, but in this case, I used the data for the 2022 House Race. 
 
-An outcome of higher percentages for each education increase would prove my hypothesis to be correct, while an outcome showing variability or decrease of percentages for each education increase would prove my hypothesis to be incorrect. 
+I used the variable "CONGPOST117" which reflects how individuals voted in the 2022 House Race. "CONGPOST117" is the outcome variable, which has been recoded to show the percentage of votes in support of the Democratic Party or the Republican Party. I recoded this variable to decipher individuals who voted in support of the Democratic Party and individuals who votd in support of the Republican Party. I did this by renaming the variable as "congvote_dem" and putting the conditions on it where when "CONGPOST117" is equal to 2, it is true that the individual voted in favor of the Democratic Party, and when "CONGPOST117" is not equal to 2, it is false that the individual voted in favor of the Republican Party. I then coded to count the total votes for each true or false, and converted this to reflect a percentage. 
 
-```{r}
+I used the variable "F_EDUCCAT2" which reflects different education levels of individuals who voted in the 2022 House Race. "F_EDUCCAT2" is the explanatory variable, which has been recoded to create four different categories of education levels for individuals who voted in the 2022 House Race. I recoded this by creating a variable called "education" with different subcategories. I used the conditions where individuals who responded 1 or 2 are "HS or less", individuals who responded 3 or 4 are "College, under 4 years", individuals who responded 5 are "Bachelor's Degree", and individuals who responded 6 are "Postgrad". 
+
+An outcome of higher percentages for each education level increase would prove my hypothesis to be correct, while an outcome showing variability or decrease of percentages for each education level increase would prove my hypothesis to be incorrect. The null hypothesis is the assumption that there is no change in percentage for support for the Democratic Party across different education levels. If the p-value is greater than 0.05, then we will fail to reject the null hypothesis, and if the p-value is less than 0.05, we will reject the null hypothesis. 
+
+```{r,echo=FALSE}
 library(tidyverse)
 library(dplyr)
 library(readr)
 library(broom)
 ```
 
-```{r}
+```{r,echo=FALSE}
 vote_data <-
   haven::read_sav("ATP W117.sav") |>
   mutate(
@@ -45,45 +49,71 @@ vote_data <-
   select(id = QKEY, education, congvote_dem) |>
   filter(!is.na(congvote_dem),
          !is.na(education))
-vote_data
 ```
+```{r,echo=FALSE}
+dem_vote <- vote_data |>
+  count(congvote_dem)
 
-Here I did some data cleaning to create table that shows individuals under the different education levels, and if they voted in support of the 2022 Democratic House or not. If they voted in support of the Democratic Party they are labeled "TRUE", if they did not then they are labeled "FALSE". 
+dem_vote <- dem_vote %>% 
+  mutate(percent = n/sum(n)) %>% 
+  select(-n)
 
-```{r}
-edu_vote <- vote_data |>
-  group_by(education) |>
-  summarize(percentage_dem = mean(congvote_dem) * 100) 
-knitr::kable(edu_vote, digits = 2)
+dem_vote <- dem_vote %>% 
+  mutate(dem = case_when(
+    congvote_dem == FALSE ~ "Republican",
+    congvote_dem == TRUE ~ "Democrats"
+  )) %>% 
+  select(-congvote_dem)
+
+dem_vote %>% 
+ggplot(mapping = aes(x = dem, y = percent, fill = dem)) +
+  geom_col() + 
+  scale_fill_manual(values = c("steelblue1", "indianred1")) +
+  labs(title = "Percentage of Votes for Each Party in The 2022 House Race", 
+       x = "Party",
+       y = "Percent")
 ```
-
-Here I created a clean table showing the average percentage of support for the 2022 Democratic House for each education level. 
 
 
 ## Results Section
 
-```{r}
+I created a visual bar plot which shows the distribution in percentage that each education level voted Democrat in the 2022 House Race. Each education level has its own column on the x-axis and the percentage of individuals supporting the Democratic Party in the 2022 House Race is shown on the y-axis. Each column is a different shade of blue, which shows the lighter the blue is means the lowest support for the Democratic Party out of the four levels, and the darker blue is means the highest support for the Democratic Party out of the four levels. 
+
+```{r,echo=FALSE}
 twentytwo_dem_house <- vote_data |>
   group_by(education) |>
   summarize(dem_pct = 100 * mean(congvote_dem, na.rm = TRUE)) |>
-ggplot(mapping = aes(x = education, y =  dem_pct)) +
+ggplot(mapping = aes(x = education, y =  dem_pct, fill = education)) +
   geom_col() +
-  labs(x = "Education Levels", y = "Percentage Votes for 2022 Democratic House", title = "Distribution of 2022 Democratic House Votes Accross Education Levels")
+  scale_fill_manual(values = c("lightblue2", "lightblue1", "lightblue3", "lightblue4")) +
+  labs(x = "Education Levels", y = "Percentage Votes for 2022 Democratic House", title = "Distribution of 2022 Democratic House Votes Accross Education Levels") 
 twentytwo_dem_house
 ```
-Here I plotted the distribution of the percentage that each education level voted democrat in the House Election. The distribution shows that as education gets higher, it seems that there is generally stronger support for the democratic party because the percentage of votes is increasing. However, it seems that college under four years has a slightly lower support for the democratic party than high school or less. 
+Based on the bar plot, we can see that as education gets higher, there is generally stronger support for the Democratic Party because the percentage increases from least to most education. "HS or less" is the lowest level of education and reflects that about 45% of individuals in this category voted in support of the Democratic Party during the 2022 House Race. Next, we see that "College, under 4 years" drops a bit lower in support of the Democratic Party, reflecting that about 44% of individuals in this category voted in support of the Democratic Party during the 2022 House Race. For both education levels "Bachelor's Degree" and "Postgrad" we see an upward trend in support for the Democratic Party during the 2022 House Race. Individuals with a Bachelor's Degree reflect about 51% voted in support of the Democratic Party while individuals with "Postgrad" education reflect about 62% voted in support of the Democratic Party during the 2022 House Race. 
 
+Next I made a regression which shows education levels and support for the Democratic Party in the 2022 House Race. This reflects more specific differences between the four education levels and their support for the Democratic Party.
 
-```{r}
+```{r,echo=FALSE}
 fit <- lm(congvote_dem ~ education, data = vote_data) 
 fit
 
 tidy(fit) |>
   knitr::kable(digits = 3)
 ```
-Here I made a regression that showed education levels and support for the Democratic party. This uses high school or less as the baseline intercept and it seems that support goes down by about .06 at college under 4 years. Then from there the support increases for both Bachelor's degree and Postgrad. 
+In this regression, the intercept is "HS or less". This shows us that support for the Democratic Party among those who have "HS or less" education is abut 45.5 percentage points, and 45.5% of individuals with "HS or less" education supported the Democratic Party in the 2022 House Race. Next, those with "College, under 4 years" show an even lower support for the Democratic Party in the 2022 House Race. When compared to "HS or less", the difference is about 0.7 percentage points, and individuals with "College, under 4 years" education show about 0.7% less support for the Democratic Party during the 2022 House Race. Next, those with "Bachelor's Degree" show a higher support for the Democratic Party in the 2022 House Race. When compared to "HS or less", the difference is about 5 percentage points, and individuals with "Bachelor's Degree" education show about 5% more support for the Democratic Party during the 2022 House Race. Lastly, those with "Postgrad" show an even higher support for the Democratic Party in the 2022 House Race. When compared to "HS or less", the difference is about 15.9 percentage points, and individuals with "Postgrad" education show about 15.9% more support for the Democratic Party in the 2022 House Race. 
+
+Based on the regression, "College, under 4 years" is not statistically significant. This is because the p-value for this education level shows 0.689, which is greater than 0.05. Therefore, we will fail to reject the null hypothesis. Both "Bachelor's Degree" and "Postgrad" are statistically significant. This is because the p-values for both of these education levels are less than 0.05, with "Bachelor's Degree" having a p-value of 0.003, and "Postgrad" having a p-value of 0. Therefore, we will reject the null hypothesis for both. 
+
+Ultimately, the results support my hypothesis that as education increases, support for the Democratic Party increases. This is because although there is a slight decrease in support from "HS or less" education to "College, under 4 years" education, the next two education levels, "Bachelor's Degree" and "Postgrad", have a positive and significant affect compared to the baseline category of "HS or less". Though the results prove my hypothesis to be correct, we should not interpret this causally. There is not random assignment, meaning this is observational research. Because of this, there could be confounding variables affecting the relationship between education and support for the Democratic Party that we are not aware of. In specific, there could be a third variable that is related to both education and support for the Democratic Party during the 2022 House Race. Some possible confounders could be economy, gender, race, income, etc. 
 
 
-## 
+## Conclusion 
+
+In this research project, I was interested in how education has an impact on support for the Democratic Party in the 2022 House Race. I used data from the American Trends Panel (ATP) Wave 117 to assess how different education levels affect individuals' support for the Democratic Party during the 2022 House Race. Based on the results, I ultimately concluded my hypothesis that as education increases, support for the Democratic Party increases is correct. This is proved by the fact that my results showed an upward trend of support for the Democratic Party during the 2022 House Race among individuals with higher education, with "Postgrad" individuals having the highest percentage of votes for the Democratic Party. 
+
+Some limitations of this analysis are the fact that there are many different confounders that can be contributing to the outcome that my results showed, and there is an absence of random assignment within this research. This makes us unable to interpret the results causally, therefore, we cannot be completely certain that increased education is responsible for increased support for the Democratic Party during the 2022 House Race. If given more time and money, my analysis could be improved in the way that I could collect better and more detailed data, and potentially conduct my own study to account for these potential confounding variables. 
+
+
+```{r print-code, ref.label=knitr::all_labels(), echo = TRUE, eval=FALSE}
 
 ```
