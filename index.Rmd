@@ -95,7 +95,6 @@ Next I made a regression which shows education levels and support for the Democr
 
 ```{r,echo=FALSE}
 fit <- lm(congvote_dem ~ education, data = vote_data) 
-fit
 
 tidy(fit) |>
   knitr::kable(digits = 3)
